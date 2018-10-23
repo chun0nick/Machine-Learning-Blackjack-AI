@@ -1,0 +1,159 @@
+import java.util.ArrayList;
+import java.util.Random;
+
+/** Class representing a DecisionTree for
+ *  a hand that does not contain aces.
+ *  Makes the decision to hit or stay and
+ *  holds future DecisionTrees.
+ */
+public class DecisionTree {
+    /** Probability of winning with a hit. */
+    private double _probHit;
+    /** Probability of winning with a pass. */
+    private double _probPass;
+    /** Number of times this tree has tried hitting. */
+    private int _hittrials;
+    /** Number of times this tree has tried passing. */
+    private int _passtrials;
+    /** The hand value of this tree. */
+    private int _hand;
+    /** The number of times this tree has been seen. */
+    private int timesSeen;
+    /** Random used to generate a random decision if chances of winning are equal. */
+    private Random r;
+    /** ArrayList holding Trees that result from hitting. */
+    private ArrayList<DecisionTree> hitTrees;
+
+    /** Constructor that sets probabilities to 50%
+     *  and sets other attributes.
+     * @param hand a hand value
+     */
+    public DecisionTree(int hand) {
+        _probHit = 0.5;
+        _probPass = 0.5;
+        _hand = hand;
+        r = new Random();
+        _hittrials = 1;
+        _passtrials = 0;
+        timesSeen = 0;
+        hitTrees = new ArrayList<>();
+    }
+
+    /** Increment the number of times this tree
+     *  has been seen by one.
+     */
+    void incrementSeen() {
+        timesSeen += 1;
+    }
+
+    /** Add a new hit Tree to this Tree's memory. */
+    void addSeen(DecisionTree Tree) {
+        Tree.incrementSeen();
+        hitTrees.add(Tree);
+    }
+
+    /** Check if a given hand has been seen by this Tree. */
+    boolean handSeen(int hand) {
+        for (DecisionTree Tree: hitTrees) {
+            if (Tree.getHand() == hand) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Get a seen hand from this Tree's memory. */
+    DecisionTree getSeen(int hand) {
+        for (DecisionTree Tree: hitTrees) {
+            if (Tree.getHand() == hand) {
+                Tree.incrementSeen();
+                return Tree;
+            }
+        }
+        return null;
+    }
+    /** Get the number of times this Tree has been seen. */
+    int getTimesSeen() {
+        return timesSeen;
+    }
+    /** Recompute the chance of winning with a hit using hitTrees. */
+    void recomputeHit() {
+        double prob = 0.0;
+        int total = 0;
+        for (DecisionTree Tree: hitTrees) {
+            if (Tree.getTimesSeen() == 0) {
+                continue;
+            }
+            prob += (Tree.maxProb() * Tree.getTimesSeen());
+            total += Tree.getTimesSeen();
+        }
+
+        _probHit = prob / total;
+    }
+    /** Check if this tree has been hit with before. */
+    boolean hasSeen() {
+        if (hitTrees.size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    /** Recompute the probabilities of winning for this Tree. */
+    void recompute() {
+        if (hasSeen()) {
+            for (DecisionTree Tree : hitTrees) {
+                if (Tree.hasSeen()) {
+                    Tree.recompute();
+                }
+            }
+            recomputeHit();
+        }
+    }
+
+    /** Return hand value of this tree. */
+    public int getHand() {
+        return _hand;
+    }
+    /** Make a decision based on this Tree's probabilities. */
+    public Decisions makeDecision() {
+        if (_passtrials < 25) {
+            _passtrials += 1;
+            return Decisions.STAY;
+        }
+        if (_hittrials < 40) {
+            _hittrials += 1;
+            return Decisions.HIT;
+        }
+        if (_probHit > _probPass) {
+            _hittrials += 1;
+            return Decisions.HIT;
+        } else if (_probPass > _probHit) {
+            _passtrials += 1;
+            return Decisions.STAY;
+        } else {
+            int randomChoice = r.nextInt(2);
+            if (randomChoice == 0) {
+                _passtrials += 1;
+                return Decisions.STAY;
+            } else {
+                _hittrials += 1;
+                return Decisions.HIT;
+            }
+        }
+    }
+    /** Set this Tree to a "bust Tree". (Useful for computing hit probability.) */
+    public void setbustedProb() {
+        _probHit = 0.0;
+        _probPass = 0.0;
+    }
+
+    /** Re-average the chance of winning with a pass for this Tree. */
+    public void reaveragePass(double won) {
+        _probPass = _probPass + ((won - _probPass) / _passtrials);
+    }
+
+    /** Return the maximum probability of winning from this Tree. */
+    double maxProb() {
+        return Math.max(_probHit, _probPass);
+    }
+}
