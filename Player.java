@@ -8,13 +8,13 @@ public class Player {
     public ArrayList<DecisionTree> _Decisions;
     public ArrayList<AceTree> _aceDecisions;
     /** The current Decision/AceTrees a player is using to make decisions. */
-    private DecisionTree currentTree;
-    private AceTree currentAceTree;
+    private DecisionTree _currentTree;
+    private AceTree _currentAceTree;
     /** The head Decision/AceTrees a player is using to make decisions. */
-    private DecisionTree headTree;
-    private AceTree headAceTree;
+    private DecisionTree _headTree;
+    private AceTree _headAceTree;
     /** The current AceNode a player is using to make decisions if they have an ace. */
-    private AceNode decisionMaker;
+    private AceNode _decisionMaker;
 
     /** Constructor for a player. */
     public Player() {
@@ -25,18 +25,18 @@ public class Player {
     /** Wipe a player's hand and head/current Trees. */
     public void wipe() {
         _hand = new ArrayList<>();
-        currentTree = null;
-        headTree = null;
-        currentAceTree = null;
-        headAceTree = null;
+        _currentTree = null;
+        _headTree = null;
+        _currentAceTree = null;
+        _headAceTree = null;
     }
     /** Set a decisionMaker. */
     public void setDecisionMaker(AceNode decision) {
-        decisionMaker = decision;
+        _decisionMaker = decision;
     }
     /** Get the current decisionMaker in use by this player. */
     public AceNode getDecisionMaker() {
-        return decisionMaker;
+        return _decisionMaker;
     }
     /** Add a card to this player's hand. */
     public void addCard(int card) {
@@ -74,7 +74,7 @@ public class Player {
     }
     /** Set the head DecisionTree of this player. */
     public void setHeadTree(DecisionTree T) {
-        headTree = T;
+        _headTree = T;
     }
     /** Check if this player's memory contains a corresponding AceTree. */
     public boolean containsAceHand(int hand) {
@@ -100,30 +100,30 @@ public class Player {
     }
     /** Get this player's head DecisionTree. */
     public DecisionTree getHeadTree() {
-        return headTree;
+        return _headTree;
     }
     /** Get this player's current DecisionTree. */
     public DecisionTree getCurrentTree() {
-        return currentTree;
+        return _currentTree;
     }
     /** Get this player's head AceTree. */
     public AceTree getHeadAceTree() {
-        return headAceTree;
+        return _headAceTree;
     }
     /** Get this player's current AceTree. */
     public AceTree getCurrentAceTree() {
-        return currentAceTree;
+        return _currentAceTree;
     }
     /** Set this player's head AceTree. */
     public void setHeadAceTree(AceTree Tree) {
-        headAceTree = Tree;
+        _headAceTree = Tree;
     }
     /** Set this player's current DecisionTree. */
     public void setCurrentTree(DecisionTree T) {
-        currentTree = T;
+        _currentTree = T;
     }
     /** Set this player's current AceTree. */
     public void setCurrentAceTree(AceTree T) {
-        currentAceTree = T;
+        _currentAceTree = T;
     }
 }

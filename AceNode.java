@@ -9,27 +9,27 @@ public class AceNode {
     /** Hand value. */
     private int _hand;
     /** Probability of winning if one hits. */
-    private double probHit;
+    private double _probHit;
     /** Probability of winning if one passes. */
-    private double probPass;
+    private double _probPass;
     /** Number of times that the AI has hit with this hand. */
-    private int hitTrials;
+    private int _hitTrials;
     /** Number of times that the AI has passed with this hand. */
-    private int passTrials;
+    private int _passTrials;
     /** ArrayList holding trees that correspond to possible draws off a hit. */
-    private ArrayList<AceTree> draws;
+    private ArrayList<AceTree> _draws;
 
     /** Constructor sets probabilities to 50% and creates a new list of possible hits. */
     AceNode(int hand) {
-        probHit = probPass = 0.5;
+        _probHit = _probPass = 0.5;
         _hand = hand;
-        hitTrials = passTrials = 1;
-        draws = new ArrayList<>(11);
+        _hitTrials = _passTrials = 1;
+        _draws = new ArrayList<>(11);
     }
 
     /** Check if a hand has been seen in the memory of this Node. */
     boolean handSeen(int hand) {
-        for (AceTree Tree : draws) {
+        for (AceTree Tree : _draws) {
             if (hand == Tree.getHand()) {
                 return true;
             }
@@ -38,7 +38,7 @@ public class AceNode {
     }
     /** Get a seen hand from this node's memory. */
     AceTree getSeen(int hand) {
-        for (AceTree Tree : draws) {
+        for (AceTree Tree : _draws) {
             if (hand == Tree.getHand())  {
                 Tree.incrementSeen();
                 return Tree;
@@ -53,16 +53,16 @@ public class AceNode {
     void computeProbHit() {
         double prob = 0;
         int total = 0;
-        for (AceTree Tree: draws) {
+        for (AceTree Tree: _draws) {
             prob += (Tree.maxProb() * Tree.getTimesSeen());
             total += Tree.getTimesSeen();
         }
-        probHit = prob / total;
+        _probHit = prob / total;
     }
 
     /** Check if this AceNode has no hit trees in the memory. */
     boolean nothingSeen() {
-        for (AceTree T: draws) {
+        for (AceTree T: _draws) {
             if (T != null) {
                 return false;
             }
@@ -74,46 +74,46 @@ public class AceNode {
      *  max probability of winning to the AceTree above. */
     double recompute() {
         if (!nothingSeen()) {
-            for (AceTree T: draws) {
+            for (AceTree T: _draws) {
                 T.recompute();
             }
             computeProbHit();
-            return Math.max(probHit, probPass);
+            return Math.max(_probHit, _probPass);
         } else {
-            return Math.max(probHit, probPass);
+            return Math.max(_probHit, _probPass);
         }
     }
 
     /** Add a new AceTree to this nodes' memory of previous hits. */
     void addSeen(AceTree T) {
-        draws.add(T);
+        _draws.add(T);
         T.incrementSeen();
     }
 
     /** Re-average the win with a hit chance of this node. */
     void reaverageHit(double won) {
-        probHit = probHit + ((won - probHit) / hitTrials);
+        _probHit = _probHit + ((won - _probHit) / _hitTrials);
     }
     /** Re-average the win with a pass chance of this node. */
     void reaveragePass(double won) {
-        probPass = probPass + ((won - probPass) / passTrials);
+        _probPass = _probPass + ((won - _probPass) / _passTrials);
     }
     /** Make a decision (hit or stay) based on higher chance of winning play. */
     public Decisions makeDecision() {
-        if (passTrials < 3) {
-            passTrials += 1;
+        if (_passTrials < 3) {
+            _passTrials += 1;
             return Decisions.STAY;
-        }else if (hitTrials < 3) {
-            hitTrials += 1;
+        }else if (_hitTrials < 3) {
+            _hitTrials += 1;
             return Decisions.HIT;
-        } else if (probHit > probPass) {
-            hitTrials += 1;
+        } else if (_probHit > _probPass) {
+            _hitTrials += 1;
             return Decisions.HIT;
-        } else if (probPass > probHit) {
-            passTrials += 1;
+        } else if (_probPass > _probHit) {
+            _passTrials += 1;
             return Decisions.STAY;
         } else {
-            passTrials += 1;
+            _passTrials += 1;
             return Decisions.STAY;
         }
     }

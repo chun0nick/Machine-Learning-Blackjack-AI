@@ -7,39 +7,35 @@ import java.util.Random;
  */
 public class Image {
     /** 2D array of possible suits. */
-    private ArrayList<ArrayList<Character>> suits;
+    private ArrayList<ArrayList<Character>> _suits;
     /** 2D array of possible face cards. */
-    private ArrayList<ArrayList<Character>> face;
+    private ArrayList<ArrayList<Character>> _face;
     /** Array of suits. */
-    private ArrayList<Character> suit;
+    private ArrayList<Character> _suit;
     /** Random used to compute a random suit to draw. */
     private Random r;
     /** Constructor that creates array lists used for deciding which cards to show. */
     Image() {
         r = new Random();
-        suits = new ArrayList<>(13);
-        suit = new ArrayList<>();
-        suits.add(suit); suits.add(suit);
+        _suits = new ArrayList<>(13);
+        _suit = new ArrayList<>();
+        _suits.add(_suit); _suits.add(_suit);
         for (int i = 2; i < 12; i += 1) {
-            suit = new ArrayList<>(4);
-            suit.add('c');
-            suit.add('h');
-            suit.add('d');
-            suit.add('s');
+            _suit = new ArrayList<>(4);
+            _suit.add('c'); _suit.add('h');
+            _suit.add('d'); _suit.add('s');
             if (i == 11) {
-                suits.set(1, suit);
+                _suits.set(1, _suit);
             }
-            suits.add(suit);
+            _suits.add(_suit);
         }
 
-        face = new ArrayList<>(4);
+        _face = new ArrayList<>(4);
         for (int i = 0; i < 4; i += 1) {
-            suit = new ArrayList<>(4);
-            suit.add('c');
-            suit.add('h');
-            suit.add('d');
-            suit.add('s');
-            face.add(suit);
+            _suit = new ArrayList<>(4);
+            _suit.add('c'); _suit.add('h');
+            _suit.add('d'); _suit.add('s');
+            _face.add(_suit);
         }
     }
     /** Get and return a corresponding image from assets. */
@@ -47,10 +43,10 @@ public class Image {
         int randomInd;
         if (hand == 10) {
             int faceCard = r.nextInt(4);
-            while (suits.get(faceCard).size() < 1) {
+            while (_suits.get(faceCard).size() < 1) {
                 faceCard = r.nextInt(4);
             }
-            ArrayList<Character> suitsAvailable = suits.get(faceCard);
+            ArrayList<Character> suitsAvailable = _suits.get(faceCard);
             randomInd = r.nextInt(suitsAvailable.size());
             char type = suitsAvailable.get(randomInd);
             suitsAvailable.remove(randomInd);
@@ -65,7 +61,7 @@ public class Image {
             }
         }
 
-        ArrayList<Character> suitsAvailable = suits.get(hand);
+        ArrayList<Character> suitsAvailable = _suits.get(hand);
         randomInd = r.nextInt(suitsAvailable.size());
         char type = suitsAvailable.get(randomInd);
         suitsAvailable.remove(randomInd);

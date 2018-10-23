@@ -18,11 +18,12 @@ public class DecisionTree {
     /** The hand value of this tree. */
     private int _hand;
     /** The number of times this tree has been seen. */
-    private int timesSeen;
+    private int _timesSeen;
+    /** ArrayList holding Trees that result from hitting. */
+    private ArrayList<DecisionTree> _hitTrees;
     /** Random used to generate a random decision if chances of winning are equal. */
     private Random r;
-    /** ArrayList holding Trees that result from hitting. */
-    private ArrayList<DecisionTree> hitTrees;
+
 
     /** Constructor that sets probabilities to 50%
      *  and sets other attributes.
@@ -35,26 +36,26 @@ public class DecisionTree {
         r = new Random();
         _hittrials = 1;
         _passtrials = 0;
-        timesSeen = 0;
-        hitTrees = new ArrayList<>();
+        _timesSeen = 0;
+        _hitTrees = new ArrayList<>();
     }
 
     /** Increment the number of times this tree
      *  has been seen by one.
      */
     void incrementSeen() {
-        timesSeen += 1;
+        _timesSeen += 1;
     }
 
     /** Add a new hit Tree to this Tree's memory. */
     void addSeen(DecisionTree Tree) {
         Tree.incrementSeen();
-        hitTrees.add(Tree);
+        _hitTrees.add(Tree);
     }
 
     /** Check if a given hand has been seen by this Tree. */
     boolean handSeen(int hand) {
-        for (DecisionTree Tree: hitTrees) {
+        for (DecisionTree Tree: _hitTrees) {
             if (Tree.getHand() == hand) {
                 return true;
             }
@@ -64,7 +65,7 @@ public class DecisionTree {
 
     /** Get a seen hand from this Tree's memory. */
     DecisionTree getSeen(int hand) {
-        for (DecisionTree Tree: hitTrees) {
+        for (DecisionTree Tree: _hitTrees) {
             if (Tree.getHand() == hand) {
                 Tree.incrementSeen();
                 return Tree;
@@ -74,13 +75,13 @@ public class DecisionTree {
     }
     /** Get the number of times this Tree has been seen. */
     int getTimesSeen() {
-        return timesSeen;
+        return _timesSeen;
     }
     /** Recompute the chance of winning with a hit using hitTrees. */
     void recomputeHit() {
         double prob = 0.0;
         int total = 0;
-        for (DecisionTree Tree: hitTrees) {
+        for (DecisionTree Tree: _hitTrees) {
             if (Tree.getTimesSeen() == 0) {
                 continue;
             }
@@ -92,7 +93,7 @@ public class DecisionTree {
     }
     /** Check if this tree has been hit with before. */
     boolean hasSeen() {
-        if (hitTrees.size() == 0) {
+        if (_hitTrees.size() == 0) {
             return false;
         }
         return true;
@@ -101,7 +102,7 @@ public class DecisionTree {
     /** Recompute the probabilities of winning for this Tree. */
     void recompute() {
         if (hasSeen()) {
-            for (DecisionTree Tree : hitTrees) {
+            for (DecisionTree Tree : _hitTrees) {
                 if (Tree.hasSeen()) {
                     Tree.recompute();
                 }

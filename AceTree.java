@@ -4,6 +4,8 @@
  */
 
 public class AceTree {
+    /** Value of hand in this tree. */
+    private int _hand;
     /** Probability of winning by changing the ace to a one. */
     private double _probOne;
     /** Probability of winning by changing the ace to an eleven. */
@@ -13,13 +15,11 @@ public class AceTree {
     /** Number of times AI has tried changing the ace to an eleven. */
     private int _elevenTrials;
     /** Times this aceTree has been seen (useful for computing probability in upper nodes). */
-    private int timesSeen;
+    private int _timesSeen;
     /** AceNode holding the hand value from changing ace value to an eleven. */
-    private AceNode Eleven;
+    private AceNode _Eleven;
     /** AceNode holding the hand value from changing ace value to a one. */
-    private AceNode One;
-    /** Value of hand in this tree. */
-    private int _hand;
+    private AceNode _One;
 
     /** Constructor for this AceTree. Sets probabilities of winning to
      * 50% each and creates two AceNodes for setting the ace to one or eleven.
@@ -28,10 +28,10 @@ public class AceTree {
     public AceTree(int hand) {
         _hand = hand;
         _probOne = _probEleven = 0.5;
-        Eleven = new AceNode(hand);
-        One = new AceNode(hand - 10);
+        _Eleven = new AceNode(hand);
+        _One = new AceNode(hand - 10);
         _oneTrials = _elevenTrials = 0;
-        timesSeen = 0;
+        _timesSeen = 0;
     }
 
     /** Function that decides whether to change the ace
@@ -57,11 +57,11 @@ public class AceTree {
 
     /** Increment the amount of times this tree has been seen. */
     void incrementSeen() {
-        timesSeen += 1;
+        _timesSeen += 1;
     }
     /** Get the amount of times this tree has been seen. */
     int getTimesSeen() {
-        return timesSeen;
+        return _timesSeen;
     }
     /** Return the max chance of winning. */
     double maxProb() {
@@ -73,15 +73,15 @@ public class AceTree {
     }
     /** Get the one node from this tree. */
     public AceNode getOne() {
-        return One;
+        return _One;
     }
     /** Get the eleven node from this tree. */
     public AceNode getEleven() {
-        return Eleven;
+        return _Eleven;
     }
     /** Recompute chances of winning using lower nodes. */
     void recompute() {
-        _probOne = One.recompute();
-        _probEleven = Eleven.recompute();
+        _probOne = _One.recompute();
+        _probEleven = _Eleven.recompute();
     }
 }
