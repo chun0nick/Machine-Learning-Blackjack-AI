@@ -3,7 +3,7 @@
  *  an ace should have a value of one or eleven.
  */
 
-public class AceTree {
+class AceTree {
     /** Value of hand in this tree. */
     private int _hand;
     /** Probability of winning by changing the ace to a one. */
@@ -25,7 +25,7 @@ public class AceTree {
      * 50% each and creates two AceNodes for setting the ace to one or eleven.
      * @param hand a hand value
      */
-    public AceTree(int hand) {
+    AceTree(int hand) {
         _hand = hand;
         _probOne = _probEleven = 0.5;
         _Eleven = new AceNode(hand);
@@ -36,7 +36,7 @@ public class AceTree {
 
     /** Function that decides whether to change the ace
      * to a one or an eleven. */
-    public OneorEleven makeDecision() {
+    OneorEleven makeDecision() {
         if (_oneTrials < 10) {
             _oneTrials += 1;
             return OneorEleven.ONE;
@@ -68,15 +68,15 @@ public class AceTree {
         return Math.max(_probEleven, _probOne);
     }
     /** Get the hand value of this tree. */
-    public int getHand() {
+    int getHand() {
         return _hand;
     }
     /** Get the one node from this tree. */
-    public AceNode getOne() {
+    AceNode getOne() {
         return _One;
     }
     /** Get the eleven node from this tree. */
-    public AceNode getEleven() {
+    AceNode getEleven() {
         return _Eleven;
     }
     /** Recompute chances of winning using lower nodes. */

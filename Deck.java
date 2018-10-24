@@ -7,7 +7,7 @@ public class Deck {
     /** ArrayList representing cards in this deck. */
     private ArrayList<Integer> _cards;
     /** Random used to draw a random card. */
-    Random r = new Random();
+    private Random r = new Random();
     /** Constructor generating a new deck to draw from. */
     Deck() {
         _cards = new ArrayList<>();
@@ -28,7 +28,7 @@ public class Deck {
         }
     }
     /** Draw a card from this deck. */
-    public int draw() {
+    int draw() {
         constructDeck();
         int cardInd = r.nextInt(_cards.size());
         int card = _cards.get(cardInd);

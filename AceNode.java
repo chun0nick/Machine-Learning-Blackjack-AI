@@ -4,7 +4,7 @@ import java.util.ArrayList;
  *  This class makes the decision to hit or stay given
  *  a hand with an ace, and holds AceTrees for hit decisions.
  */
-public class AceNode {
+class AceNode {
 
     /** Hand value. */
     private int _hand;
@@ -99,7 +99,7 @@ public class AceNode {
         _probPass = _probPass + ((won - _probPass) / _passTrials);
     }
     /** Make a decision (hit or stay) based on higher chance of winning play. */
-    public Decisions makeDecision() {
+    Decisions makeDecision() {
         if (_passTrials < 3) {
             _passTrials += 1;
             return Decisions.STAY;

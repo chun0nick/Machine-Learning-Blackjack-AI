@@ -3,9 +3,9 @@ import java.util.ArrayList;
 /** Class that holds various utility functions useful during
  *  execution.
  */
-public class Utils {
+class Utils {
     /** Sum a hand. */
-    public static int sum(ArrayList<Integer> hand) {
+    static int sum(ArrayList<Integer> hand) {
         int total = 0;
         for (Integer x: hand) {
             total += x;
@@ -13,7 +13,7 @@ public class Utils {
         return total;
     }
     /** Check if a hand can be "unbusted" by changing aces to ones. */
-    public static boolean canUnbust(ArrayList<Integer> L) {
+    static boolean canUnbust(ArrayList<Integer> L) {
         if (containsAce(L)) {
             int numAces = aceCount(L);
             for (int i = 1; i <= numAces; i += 1) {
@@ -48,7 +48,7 @@ public class Utils {
     }
 
     /** Check if a hand contains an ace. */
-    public static boolean containsAce(ArrayList<Integer> L) {
+    static boolean containsAce(ArrayList<Integer> L) {
         for (int i = 0; i < L.size(); i += 1) {
             if (L.get(i) == 11) {
                 return true;

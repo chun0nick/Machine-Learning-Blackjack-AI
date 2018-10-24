@@ -5,7 +5,7 @@ import java.util.Random;
 /** Class that gets a corresponding image from assets
  *  given a card value.
  */
-public class Image {
+class Image {
     /** 2D array of possible suits. */
     private ArrayList<ArrayList<Character>> _suits;
     /** 2D array of possible face cards. */
@@ -39,7 +39,7 @@ public class Image {
         }
     }
     /** Get and return a corresponding image from assets. */
-    public ImageIcon getImage(int hand) {
+    ImageIcon getImage(int hand) {
         int randomInd;
         if (hand == 10) {
             int faceCard = r.nextInt(4);

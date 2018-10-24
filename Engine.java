@@ -3,19 +3,19 @@
  *  the DecisionTrees.
  */
 
-public class Engine {
+class Engine {
 
     /** Generates an AI */
-    public static Player getAI() {
-        Player Player1, Player2;
-        Player1 = new Player();
-        Player2 = new Player();
+    static AI getAI() {
+        AI Player1, Player2;
+        Player1 = new AI();
+        Player2 = new AI();
         playRounds(Player1, Player2);
         return Player1;
     }
 
     /** Has AIs play 500,000 rounds against each other. */
-    public static void playRounds(Player p1, Player p2) {
+    static void playRounds(AI p1, AI p2) {
         for (int j = 1; j < 500000; j += 1) {
             Deck deck = new Deck();
             p1.wipe();
@@ -158,7 +158,7 @@ public class Engine {
     }
 
     /** The decision function for a player with a hand that doesn't contain an ace. */
-    public static boolean playerDecision(Player p, Deck deck, boolean building) {
+    static boolean playerDecision(AI p, Deck deck, boolean building) {
         boolean busted = false;
         DecisionTree decided;
         DecisionTree head;
@@ -205,7 +205,7 @@ public class Engine {
     }
 
     /** The decision function for a player that has an ace in hand. */
-    public static boolean aceDecision(Player p, Deck d, boolean building) {
+    static boolean aceDecision(AI p, Deck d, boolean building) {
         boolean pDone = false;
         boolean busted = false;
         int aceInd = 0;

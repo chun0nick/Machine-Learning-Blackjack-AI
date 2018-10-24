@@ -6,7 +6,7 @@ import java.util.Random;
  *  Makes the decision to hit or stay and
  *  holds future DecisionTrees.
  */
-public class DecisionTree {
+class DecisionTree {
     /** Probability of winning with a hit. */
     private double _probHit;
     /** Probability of winning with a pass. */
@@ -29,7 +29,7 @@ public class DecisionTree {
      *  and sets other attributes.
      * @param hand a hand value
      */
-    public DecisionTree(int hand) {
+    DecisionTree(int hand) {
         _probHit = 0.5;
         _probPass = 0.5;
         _hand = hand;
@@ -112,11 +112,11 @@ public class DecisionTree {
     }
 
     /** Return hand value of this tree. */
-    public int getHand() {
+    int getHand() {
         return _hand;
     }
     /** Make a decision based on this Tree's probabilities. */
-    public Decisions makeDecision() {
+    Decisions makeDecision() {
         if (_passtrials < 25) {
             _passtrials += 1;
             return Decisions.STAY;
@@ -143,13 +143,13 @@ public class DecisionTree {
         }
     }
     /** Set this Tree to a "bust Tree". (Useful for computing hit probability.) */
-    public void setbustedProb() {
+    void setbustedProb() {
         _probHit = 0.0;
         _probPass = 0.0;
     }
 
     /** Re-average the chance of winning with a pass for this Tree. */
-    public void reaveragePass(double won) {
+    void reaveragePass(double won) {
         _probPass = _probPass + ((won - _probPass) / _passtrials);
     }
 

@@ -24,7 +24,8 @@ public class GUI extends JPanel{
 
     private ArrayList<Integer> Playerhand = new ArrayList<>();
 
-    private Player AI = Engine.getAI();
+    private AI AI1 = Engine.getAI();
+    private Player player = new Player();
 
     private JLabel AICard1;
 
@@ -32,7 +33,7 @@ public class GUI extends JPanel{
 
     private Image Images;
 
-    public GUI() {
+    GUI() {
         topPanel.setBackground(new Color(0, 122, 0));
         dcardPanel.setBackground(new Color(0, 122, 0));
         pcardPanel.setBackground(new Color(0, 122, 0));
@@ -97,14 +98,14 @@ public class GUI extends JPanel{
             AICard1 = new JLabel(new ImageIcon("assets/back.jpg"));
 
             for (int i = 0; i < 2; i += 1) {
-                Playerhand.add(d.draw());
-                AI.addCard(d.draw());
+                player.addCard(d.draw());
+                AI1.addCard(d.draw());
             }
 
-            pCard1 = new JLabel(Images.getImage(Playerhand.get(0)));
-            pCard2 = new JLabel(Images.getImage(Playerhand.get(1)));
+            pCard1 = new JLabel(Images.getImage(player.get(0)));
+            pCard2 = new JLabel(Images.getImage(player.get(1)));
 
-            AICard1 = new JLabel(Images.getImage(AI.getHand().get(0)));
+            AICard1 = new JLabel(Images.getImage(AI1.get(0)));
             AICard2 = new JLabel(new ImageIcon("assets/back.jpg"));
 
             dcardPanel.add(AICard1);
@@ -132,9 +133,9 @@ public class GUI extends JPanel{
             pcardPanel.add(pCardhit);
             pcardPanel.repaint();
 
-            Playerhand.add(drawn);
+            player.addCard(drawn);
 
-            if (Utils.sum(Playerhand) > 21) {
+            if (player.handValue() > 21) {
                 if (!Utils.canUnbust(Playerhand)) {
                     winlosebox.setText("Bust");
                     hitbutton.setEnabled(false);
@@ -144,7 +145,7 @@ public class GUI extends JPanel{
                 }
             }
 
-            playerlabel.setText(" Player : " + Utils.sum(Playerhand));
+            playerlabel.setText(" Player : " + player.handValue());
         }
     }
 
@@ -153,37 +154,37 @@ public class GUI extends JPanel{
     class staybutton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JLabel AICardhit;
-            if (Utils.sum(Playerhand) > 21) {
+            if (player.handValue() > 21) {
                 if (!Utils.canUnbust(Playerhand)) {
-                    playerlabel.setText(" Player: " + Utils.sum(Playerhand));
+                    playerlabel.setText(" Player: " + player.handValue());
                 }
             }
             dcardPanel.removeAll();
             dcardPanel.repaint();
             boolean AIbust;
-            if (Utils.containsAce(AI.getHand())) {
-                AIbust = Engine.aceDecision(AI, d, false);
+            if (Utils.containsAce(AI1.getHand())) {
+                AIbust = Engine.aceDecision(AI1, d, false);
             } else {
-                AIbust = Engine.playerDecision(AI, d, false);
+                AIbust = Engine.playerDecision(AI1, d, false);
             }
             dcardPanel.add(dealerlabel);
             dealerlabel.setText(" " + dealerlabel.getText());
 
 
-            dealerlabel.setText("AI: " + AI.handValue());
-            playerlabel.setText("Player: " + Utils.sum(Playerhand));
+            dealerlabel.setText("AI: " + AI1.handValue());
+            playerlabel.setText("Player: " + player.handValue());
 
             dcardPanel.add(AICard1);
-            for (int i = 1; i < AI.getHand().size(); i += 1) {
-                AICardhit = new JLabel(Images.getImage(AI.getHand().get(i)));
+            for (int i = 1; i < AI1.getHand().size(); i += 1) {
+                AICardhit = new JLabel(Images.getImage(AI1.getHand().get(i)));
                 dcardPanel.add(AICardhit);
             }
             if (AIbust) {
                 winlosebox.setText("Player");
             }
-            else if (AI.handValue() > Utils.sum(Playerhand)) {
+            else if (AI1.handValue() > player.handValue()) {
                 winlosebox.setText("AI");
-            } else if (AI.handValue() < Utils.sum(Playerhand)) {
+            } else if (AI1.handValue() < player.handValue()) {
                 winlosebox.setText("Player");
             } else {
                 winlosebox.setText("Tie");
@@ -200,7 +201,8 @@ public class GUI extends JPanel{
             dealerlabel.setText("AI: ");
             playerlabel.setText("Player: ");
             winlosebox.setText("");
-            AI.wipe();
+            AI1.wipe();
+            player.clearHand();
             d = new Deck();
             Playerhand = new ArrayList<>();
 
