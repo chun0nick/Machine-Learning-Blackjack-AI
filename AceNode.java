@@ -26,7 +26,6 @@ class AceNode {
         _hitTrials = _passTrials = 1;
         _draws = new ArrayList<>(11);
     }
-
     /** Check if a hand has been seen in the memory of this Node. */
     boolean handSeen(int hand) {
         for (AceTree Tree : _draws) {
@@ -36,6 +35,12 @@ class AceNode {
         }
         return false;
     }
+
+    void Print() {
+        System.out.println(_probHit);
+        System.out.println(_probPass);
+    }
+
     /** Get a seen hand from this node's memory. */
     AceTree getSeen(int hand) {
         for (AceTree Tree : _draws) {
@@ -99,11 +104,11 @@ class AceNode {
         _probPass = _probPass + ((won - _probPass) / _passTrials);
     }
     /** Make a decision (hit or stay) based on higher chance of winning play. */
-    Decisions makeDecision() {
-        if (_passTrials < 3) {
+    Decisions makeDecision(boolean building) {
+        if (_passTrials < 20) {
             _passTrials += 1;
             return Decisions.STAY;
-        }else if (_hitTrials < 3) {
+        }else if (_hitTrials < 20) {
             _hitTrials += 1;
             return Decisions.HIT;
         } else if (_probHit > _probPass) {

@@ -11,12 +11,13 @@ class Engine {
         Player1 = new AI();
         Player2 = new AI();
         playRounds(Player1, Player2);
-        return Player1;
+        Player2.getAceTree(17).getOne().getSeen(14).getOne().getSeen(20).Print();
+        return Player2;
     }
 
     /** Has AIs play 500,000 rounds against each other. */
     static void playRounds(AI p1, AI p2) {
-        for (int j = 1; j < 500000; j += 1) {
+        for (int j = 1; j < 700000; j += 1) {
             Deck deck = new Deck();
             p1.wipe();
             p2.wipe();
@@ -177,7 +178,7 @@ class Engine {
             if (dec == Decisions.HIT) {
                 p.addCard(deck.draw());
                 if (Utils.containsAce(p.getHand())) {
-                    return aceDecision(p, deck, false);
+                    return aceDecision(p, deck, true);
                 }
                 if (p.getCurrentTree().handSeen(p.handValue())) {
                     decided = p.getCurrentTree().getSeen(p.handValue());
@@ -212,7 +213,12 @@ class Engine {
         AceTree topTree;
         /* If there's more than one ace, set one to one. */
         if (Utils.aceCount(p.getHand()) > 1) {
-            p.getHand().set(1, 1);
+            for (int i = p.getHand().size() - 1; i >= 0; i -= 1) {
+                if (p.get(i) == 11) {
+                    p.getHand().set(i, 1);
+                    break;
+                }
+            }
         }
         for (int i = 0; i < p.getHand().size(); i += 1) {
             if (p.getHand().get(i) == 1 || p.getHand().get(i) == 11) {
@@ -222,7 +228,7 @@ class Engine {
         }
         /* Check if hand is in player's memory. */
         if (!p.containsAceHand(p.handValue())) {
-            topTree = new AceTree(p.handValue());
+            topTree = new AceTree(p.handValue(), false);
             p.addAceTree(topTree);
         } else {
             topTree = p.getAceTree(p.handValue());
@@ -230,7 +236,7 @@ class Engine {
         p.setHeadAceTree(topTree);
         p.setCurrentAceTree(topTree);
 
-        while (!pDone && !busted) {
+        while (true) {
             OneorEleven dec = p.getCurrentAceTree().makeDecision();
             AceNode decisionMaker;
             AceTree seen;
@@ -238,7 +244,7 @@ class Engine {
             if (dec == OneorEleven.ONE) {
                 decisionMaker = p.getCurrentAceTree().getOne();
                 p.getHand().set(aceInd, 1);
-                decision = decisionMaker.makeDecision();
+                decision = decisionMaker.makeDecision(building);
                 p.setDecisionMaker(decisionMaker);
 
                 if (decision == Decisions.HIT) {
@@ -249,27 +255,28 @@ class Engine {
                     }
                     if (decisionMaker.handSeen(p.handValue())) {
                         seen = decisionMaker.getSeen(p.handValue());
-                        p.setCurrentAceTree(seen);
                     } else {
-                        seen = new AceTree(p.handValue());
+                        seen = new AceTree(p.handValue(), true);
                         decisionMaker.addSeen(seen);
-                        p.setCurrentAceTree(seen);
                     }
+                    p.setCurrentAceTree(seen);
 
                     if (p.handValue() > 21) {
-                        decisionMaker.reaverageHit(0.0);
+                        seen.setBusted();
                         busted = true;
+                        break;
                     }
                 } else {
                     if (p.handValue() > 21) {
+                        decisionMaker.reaveragePass(0.0);
                         busted = true;
                     }
-                    pDone = true;
+                    break;
                 }
             } else {
                 decisionMaker = p.getCurrentAceTree().getEleven();
                 p.getHand().set(aceInd, 11);
-                decision = decisionMaker.makeDecision();
+                decision = decisionMaker.makeDecision(building);
                 p.setDecisionMaker(decisionMaker);
 
                 if (decision == Decisions.HIT) {
@@ -280,23 +287,23 @@ class Engine {
                     }
                     if (decisionMaker.handSeen(p.handValue())) {
                         seen = decisionMaker.getSeen(p.handValue());
-                        p.setCurrentAceTree(seen);
                     } else {
-                        seen = new AceTree(p.handValue());
+                        seen = new AceTree(p.handValue(), false);
                         decisionMaker.addSeen(seen);
-                        p.setCurrentAceTree(seen);
                     }
+                    p.setCurrentAceTree(seen);
 
                     if (p.handValue() > 21) {
-                        decisionMaker.reaverageHit(0.0);
+                        seen.setBusted();
                         busted = true;
+                        break;
                     }
                 } else {
                     if (p.handValue() > 21) {
                         decisionMaker.reaveragePass(0.0);
                         busted = true;
                     }
-                    pDone = true;
+                    break;
 
                 }
             }

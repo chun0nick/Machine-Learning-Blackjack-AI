@@ -22,8 +22,6 @@ public class GUI extends JPanel{
     private JLabel dealerlabel = new JLabel();
     private JLabel playerlabel = new JLabel();
 
-    private ArrayList<Integer> Playerhand = new ArrayList<>();
-
     private AI AI1 = Engine.getAI();
     private Player player = new Player();
 
@@ -136,7 +134,7 @@ public class GUI extends JPanel{
             player.addCard(drawn);
 
             if (player.handValue() > 21) {
-                if (!Utils.canUnbust(Playerhand)) {
+                if (!Utils.canUnbust(player.getHand())) {
                     winlosebox.setText("Bust");
                     hitbutton.setEnabled(false);
                     dealbutton.setEnabled(false);
@@ -155,7 +153,7 @@ public class GUI extends JPanel{
         public void actionPerformed(ActionEvent e) {
             JLabel AICardhit;
             if (player.handValue() > 21) {
-                if (!Utils.canUnbust(Playerhand)) {
+                if (!Utils.canUnbust(player.getHand())) {
                     playerlabel.setText(" Player: " + player.handValue());
                 }
             }
@@ -204,7 +202,6 @@ public class GUI extends JPanel{
             AI1.wipe();
             player.clearHand();
             d = new Deck();
-            Playerhand = new ArrayList<>();
 
             dcardPanel.removeAll();
             pcardPanel.removeAll();

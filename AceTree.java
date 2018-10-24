@@ -21,26 +21,39 @@ class AceTree {
     /** AceNode holding the hand value from changing ace value to a one. */
     private AceNode _One;
 
+    public boolean _inOne;
+
     /** Constructor for this AceTree. Sets probabilities of winning to
      * 50% each and creates two AceNodes for setting the ace to one or eleven.
      * @param hand a hand value
      */
-    AceTree(int hand) {
+    AceTree(int hand, boolean inOne) {
         _hand = hand;
         _probOne = _probEleven = 0.5;
-        _Eleven = new AceNode(hand);
-        _One = new AceNode(hand - 10);
+        _inOne = inOne;
+
+        if (inOne) {
+            _Eleven = new AceNode(hand + 10);
+            _One = new AceNode(hand);
+        } else {
+            _Eleven = new AceNode(hand);
+            _One = new AceNode(hand - 10);
+        }
         _oneTrials = _elevenTrials = 0;
         _timesSeen = 0;
+    }
+    void Print() {
+        System.out.println(_probOne);
+        System.out.println(_probEleven);
     }
 
     /** Function that decides whether to change the ace
      * to a one or an eleven. */
     OneorEleven makeDecision() {
-        if (_oneTrials < 10) {
+        if (_oneTrials < 20) {
             _oneTrials += 1;
             return OneorEleven.ONE;
-        } else if (_elevenTrials < 10) {
+        } else if (_elevenTrials < 20) {
             _elevenTrials += 1;
             return OneorEleven.ELEVEN;
         }
@@ -81,7 +94,17 @@ class AceTree {
     }
     /** Recompute chances of winning using lower nodes. */
     void recompute() {
-        _probOne = _One.recompute();
-        _probEleven = _Eleven.recompute();
+        if (!(_probOne == 0.0)) {
+            _probOne = _One.recompute();
+        }
+        if (!(_probEleven == 0.0)) {
+            _probEleven = _Eleven.recompute();
+        }
     }
+    /** Set this tree to a bust tree. */
+    void setBusted() {
+        _probOne = 0.0;
+        _probEleven = 0.0;
+    }
+
 }
