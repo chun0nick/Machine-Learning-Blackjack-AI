@@ -40,11 +40,6 @@ class DecisionTree {
         _hitTrees = new ArrayList<>();
     }
 
-    void Print() {
-        System.out.println(_probHit);
-        System.out.println(_probPass);
-    }
-
     /** Increment the number of times this tree
      *  has been seen by one.
      */

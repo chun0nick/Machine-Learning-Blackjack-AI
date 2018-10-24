@@ -42,10 +42,6 @@ class AceTree {
         _oneTrials = _elevenTrials = 0;
         _timesSeen = 0;
     }
-    void Print() {
-        System.out.println(_probOne);
-        System.out.println(_probEleven);
-    }
 
     /** Function that decides whether to change the ace
      * to a one or an eleven. */

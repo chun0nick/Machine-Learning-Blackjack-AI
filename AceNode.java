@@ -35,12 +35,6 @@ class AceNode {
         }
         return false;
     }
-
-    void Print() {
-        System.out.println(_probHit);
-        System.out.println(_probPass);
-    }
-
     /** Get a seen hand from this node's memory. */
     AceTree getSeen(int hand) {
         for (AceTree Tree : _draws) {
