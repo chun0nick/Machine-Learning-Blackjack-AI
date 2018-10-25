@@ -11,7 +11,6 @@ class Engine {
         Player1 = new AI();
         Player2 = new AI();
         playRounds(Player1, Player2);
-        Player2.getAceTree(17).getOne().getSeen(14).getOne().getSeen(20).Print();
         return Player2;
     }
 
