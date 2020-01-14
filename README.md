@@ -5,3 +5,5 @@ Run Play.java to start (It'll take 10-20 seconds to generate the AI, depending o
 
 Learning is done via reinforcement learning using decision trees. 
 Read DecisionTree and Engine for the exact implementation.
+
+TODO: Aces are a still a little buggy
