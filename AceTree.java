@@ -5,7 +5,7 @@
 
 class AceTree {
     /** Value of hand in this tree. */
-    private int _hand;
+    private int[] _hand;
     /** Probability of winning by changing the ace to a one. */
     private double _probOne;
     /** Probability of winning by changing the ace to an eleven. */
@@ -27,17 +27,17 @@ class AceTree {
      * 50% each and creates two AceNodes for setting the ace to one or eleven.
      * @param hand a hand value
      */
-    AceTree(int hand, boolean inOne) {
+    AceTree(int[] hand, boolean inOne) {
         _hand = hand;
         _probOne = _probEleven = 0.5;
         _inOne = inOne;
 
         if (inOne) {
-            _Eleven = new AceNode(hand + 10);
+            _Eleven = new AceNode(Utils.replaceAce(1, 11, _hand));
             _One = new AceNode(hand);
         } else {
             _Eleven = new AceNode(hand);
-            _One = new AceNode(hand - 10);
+            _One = new AceNode(Utils.replaceAce(11, 1, _hand));
         }
         _oneTrials = _elevenTrials = 0;
         _timesSeen = 0;
@@ -77,7 +77,7 @@ class AceTree {
         return Math.max(_probEleven, _probOne);
     }
     /** Get the hand value of this tree. */
-    int getHand() {
+    int[] getHand() {
         return _hand;
     }
     /** Get the one node from this tree. */

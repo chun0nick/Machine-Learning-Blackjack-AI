@@ -48,9 +48,9 @@ class AI extends Player {
         return _hand;
     }
     /** See if this player has a given hand in their memory. */
-    boolean containsHand(int hand) {
+    boolean containsHand(int[] hand) {
         for (DecisionTree Tree : _Decisions) {
-            if (Tree.getHand() == hand) {
+            if (Utils.equivalentHands(hand, Tree.getHand())) {
                 return true;
             }
         }
@@ -61,9 +61,9 @@ class AI extends Player {
         _Decisions.add(Tree);
     }
     /** Get a DecisionTree from this player's memory given a hand value. */
-    DecisionTree getTree(int hand) {
+    DecisionTree getTree(int[] hand) {
         for (DecisionTree Tree: _Decisions) {
-            if (hand == Tree.getHand()) {
+            if (Utils.equivalentHands(hand, Tree.getHand())) {
                 return Tree;
             }
         }
@@ -74,9 +74,9 @@ class AI extends Player {
         _headTree = T;
     }
     /** Check if this player's memory contains a corresponding AceTree. */
-    boolean containsAceHand(int hand) {
+    boolean containsAceHand(int[] hand) {
         for (AceTree Tree : _aceDecisions) {
-            if (Tree.getHand() == hand) {
+            if (Utils.equivalentHands(hand, Tree.getHand())) {
                 return true;
             }
         }
@@ -87,9 +87,9 @@ class AI extends Player {
         _aceDecisions.add(Tree);
     }
     /** Get an AceTree from this player's memory, given a hand value. */
-    AceTree getAceTree(int hand) {
+    AceTree getAceTree(int[] hand) {
         for (AceTree T: _aceDecisions) {
-            if (T.getHand() == hand) {
+            if (Utils.equivalentHands(hand, T.getHand())) {
                 return T;
             }
         }

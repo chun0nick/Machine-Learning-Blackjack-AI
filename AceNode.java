@@ -7,7 +7,7 @@ import java.util.ArrayList;
 class AceNode {
 
     /** Hand value. */
-    private int _hand;
+    private int[] _hand;
     /** Probability of winning if one hits. */
     private double _probHit;
     /** Probability of winning if one passes. */
@@ -20,25 +20,25 @@ class AceNode {
     private ArrayList<AceTree> _draws;
 
     /** Constructor sets probabilities to 50% and creates a new list of possible hits. */
-    AceNode(int hand) {
+    AceNode(int[] hand) {
         _probHit = _probPass = 0.5;
         _hand = hand;
         _hitTrials = _passTrials = 1;
         _draws = new ArrayList<>(11);
     }
     /** Check if a hand has been seen in the memory of this Node. */
-    boolean handSeen(int hand) {
+    boolean handSeen(int[] hand) {
         for (AceTree Tree : _draws) {
-            if (hand == Tree.getHand()) {
+            if (Utils.equivalentHands(hand, Tree.getHand())) {
                 return true;
             }
         }
         return false;
     }
     /** Get a seen hand from this node's memory. */
-    AceTree getSeen(int hand) {
+    AceTree getSeen(int[] hand) {
         for (AceTree Tree : _draws) {
-            if (hand == Tree.getHand())  {
+            if (Utils.equivalentHands(hand, Tree.getHand()))  {
                 Tree.incrementSeen();
                 return Tree;
             }

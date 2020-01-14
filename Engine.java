@@ -1,3 +1,5 @@
+import java.util.Collections;
+
 /** Class that actually generates the AI
  *  by playing it against itself and re-weighting
  *  the DecisionTrees.
@@ -16,7 +18,7 @@ class Engine {
 
     /** Has AIs play 500,000 rounds against each other. */
     static void playRounds(AI p1, AI p2) {
-        for (int j = 1; j < 700000; j += 1) {
+        for (int j = 1; j < 1500000; j += 1) {
             Deck deck = new Deck();
             p1.wipe();
             p2.wipe();
@@ -163,11 +165,13 @@ class Engine {
         DecisionTree decided;
         DecisionTree head;
         Decisions dec;
+        Collections.sort(p.getHand());
+        int[] sortedHand = Utils.arrayListToArray(p.getHand());
         /* Check if hand is in player's memory. */
-        if (p.containsHand(p.handValue())) {
-            head = p.getTree(p.handValue());
+        if (p.containsHand(sortedHand)) {
+            head = p.getTree(sortedHand);
         } else {
-            head = new DecisionTree(p.handValue());
+            head = new DecisionTree(sortedHand);
             p.addTree(head);
         }
         p.setHeadTree(head);
@@ -175,14 +179,18 @@ class Engine {
         while (true) {
             dec = p.getCurrentTree().makeDecision();
             if (dec == Decisions.HIT) {
-                p.addCard(deck.draw());
+                int card = deck.draw();
+                p.addCard(card);
+                Collections.sort(p.getHand());
+                sortedHand = Utils.arrayListToArray(p.getHand());
+
                 if (Utils.containsAce(p.getHand())) {
                     return aceDecision(p, deck, true);
                 }
-                if (p.getCurrentTree().handSeen(p.handValue())) {
-                    decided = p.getCurrentTree().getSeen(p.handValue());
+                if (p.getCurrentTree().handSeen(sortedHand)) {
+                    decided = p.getCurrentTree().getSeen(sortedHand);
                 } else {
-                    decided = new DecisionTree(p.handValue());
+                    decided = new DecisionTree(sortedHand);
                     p.getCurrentTree().addSeen(decided);
                 }
 
@@ -210,6 +218,7 @@ class Engine {
         boolean busted = false;
         int aceInd = 0;
         AceTree topTree;
+
         /* If there's more than one ace, set one to one. */
         if (Utils.aceCount(p.getHand()) > 1) {
             for (int i = p.getHand().size() - 1; i >= 0; i -= 1) {
@@ -219,18 +228,22 @@ class Engine {
                 }
             }
         }
+        Collections.sort(p.getHand());
+        int[] sortedHand = Utils.arrayListToArray(p.getHand());
+
         for (int i = 0; i < p.getHand().size(); i += 1) {
             if (p.getHand().get(i) == 1 || p.getHand().get(i) == 11) {
                 aceInd = i;
                 break;
             }
         }
+
         /* Check if hand is in player's memory. */
-        if (!p.containsAceHand(p.handValue())) {
-            topTree = new AceTree(p.handValue(), false);
+        if (!p.containsAceHand(sortedHand)) {
+            topTree = new AceTree(sortedHand, false);
             p.addAceTree(topTree);
         } else {
-            topTree = p.getAceTree(p.handValue());
+            topTree = p.getAceTree(sortedHand);
         }
         p.setHeadAceTree(topTree);
         p.setCurrentAceTree(topTree);
@@ -252,10 +265,20 @@ class Engine {
                     if (card == 11) {
                         p.getHand().set(p.getHand().size()-1, 1);
                     }
-                    if (decisionMaker.handSeen(p.handValue())) {
-                        seen = decisionMaker.getSeen(p.handValue());
+                    Collections.sort(p.getHand());
+                    sortedHand = Utils.arrayListToArray(p.getHand());
+
+                    for (int i = 0; i < p.getHand().size(); i += 1) {
+                        if (p.getHand().get(i) == 1 || p.getHand().get(i) == 11) {
+                            aceInd = i;
+                            break;
+                        }
+                    }
+
+                    if (decisionMaker.handSeen(sortedHand)) {
+                        seen = decisionMaker.getSeen(sortedHand);
                     } else {
-                        seen = new AceTree(p.handValue(), true);
+                        seen = new AceTree(sortedHand, true);
                         decisionMaker.addSeen(seen);
                     }
                     p.setCurrentAceTree(seen);
@@ -281,13 +304,23 @@ class Engine {
                 if (decision == Decisions.HIT) {
                     int card = d.draw();
                     p.addCard(card);
+                    Collections.sort(p.getHand());
+                    sortedHand = Utils.arrayListToArray(p.getHand());
+
+                    for (int i = 0; i < p.getHand().size(); i += 1) {
+                        if (p.getHand().get(i) == 1 || p.getHand().get(i) == 11) {
+                            aceInd = i;
+                            break;
+                        }
+                    }
+
                     if (card == 11) {
                         p.getHand().set(p.getHand().size() - 1, 1);
                     }
-                    if (decisionMaker.handSeen(p.handValue())) {
-                        seen = decisionMaker.getSeen(p.handValue());
+                    if (decisionMaker.handSeen(sortedHand)) {
+                        seen = decisionMaker.getSeen(sortedHand);
                     } else {
-                        seen = new AceTree(p.handValue(), false);
+                        seen = new AceTree(sortedHand, false);
                         decisionMaker.addSeen(seen);
                     }
                     p.setCurrentAceTree(seen);

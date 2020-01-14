@@ -16,7 +16,7 @@ class DecisionTree {
     /** Number of times this tree has tried passing. */
     private int _passtrials;
     /** The hand value of this tree. */
-    private int _hand;
+    private int[] _hand;
     /** The number of times this tree has been seen. */
     private int _timesSeen;
     /** ArrayList holding Trees that result from hitting. */
@@ -29,7 +29,7 @@ class DecisionTree {
      *  and sets other attributes.
      * @param hand a hand value
      */
-    DecisionTree(int hand) {
+    DecisionTree(int[] hand) {
         _probHit = 0.5;
         _probPass = 0.5;
         _hand = hand;
@@ -54,9 +54,9 @@ class DecisionTree {
     }
 
     /** Check if a given hand has been seen by this Tree. */
-    boolean handSeen(int hand) {
+    boolean handSeen(int[] hand) {
         for (DecisionTree Tree: _hitTrees) {
-            if (Tree.getHand() == hand) {
+            if (Utils.equivalentHands(hand, Tree.getHand())) {
                 return true;
             }
         }
@@ -64,9 +64,9 @@ class DecisionTree {
     }
 
     /** Get a seen hand from this Tree's memory. */
-    DecisionTree getSeen(int hand) {
+    DecisionTree getSeen(int[] hand) {
         for (DecisionTree Tree: _hitTrees) {
-            if (Tree.getHand() == hand) {
+            if (Utils.equivalentHands(hand, Tree.getHand())) {
                 Tree.incrementSeen();
                 return Tree;
             }
@@ -112,7 +112,7 @@ class DecisionTree {
     }
 
     /** Return hand value of this tree. */
-    int getHand() {
+    int[] getHand() {
         return _hand;
     }
     /** Make a decision based on this Tree's probabilities. */

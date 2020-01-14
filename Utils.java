@@ -12,6 +12,16 @@ class Utils {
         }
         return total;
     }
+    static int[] arrayListToArray(ArrayList<Integer> arrayList) {
+        int[] converted = new int[arrayList.size()];
+        int ind = 0;
+        for (int val : arrayList) {
+            converted[ind] = val;
+            ind += 1;
+        }
+        return converted;
+    }
+
     /** Check if a hand can be "unbusted" by changing aces to ones. */
     static boolean canUnbust(ArrayList<Integer> L) {
         if (containsAce(L)) {
@@ -24,6 +34,31 @@ class Utils {
             }
         }
         return false;
+    }
+
+    static int[] replaceAce(int toReplace, int replace, int[] arr) {
+        int[] replaced = new int[arr.length];
+        for (int i = 0; i < arr.length; i ++) {
+            if (arr[i] == toReplace) {
+                replaced[i] = replace;
+            } else {
+                replaced[i] = arr[i];
+            }
+        }
+        return replaced;
+    }
+
+    static boolean equivalentHands(int[] hand1, int[] hand2) {
+        if (hand1.length != hand2.length) {
+            return false;
+        } else {
+            for (int i = 0; i < hand1.length; i ++) {
+                if (hand1[i] != hand2[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
     /** Count aces appearing in a given hand. */

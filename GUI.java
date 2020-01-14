@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Collections;
 import java.util.ArrayList;
 
 /** Class for the GUI used by this program.
@@ -26,6 +27,7 @@ public class GUI extends JPanel{
     private Player player = new Player();
 
     private JLabel AICard1;
+    private int AICard1Val;
 
     private Deck d;
 
@@ -99,11 +101,14 @@ public class GUI extends JPanel{
                 player.addCard(d.draw());
                 AI1.addCard(d.draw());
             }
+            Collections.sort(AI1.getHand());
 
             pCard1 = new JLabel(Images.getImage(player.get(0)));
             pCard2 = new JLabel(Images.getImage(player.get(1)));
 
             AICard1 = new JLabel(Images.getImage(AI1.get(0)));
+            AICard1Val = AI1.get(0);
+
             AICard2 = new JLabel(new ImageIcon("assets/back.jpg"));
 
             dcardPanel.add(AICard1);
@@ -165,18 +170,31 @@ public class GUI extends JPanel{
             } else {
                 AIbust = Engine.playerDecision(AI1, d, false);
             }
-            dcardPanel.add(dealerlabel);
+
             dealerlabel.setText(" " + dealerlabel.getText());
 
-
-            dealerlabel.setText("AI: " + AI1.handValue());
             playerlabel.setText("Player: " + player.handValue());
 
-            dcardPanel.add(AICard1);
-            for (int i = 1; i < AI1.getHand().size(); i += 1) {
-                AICardhit = new JLabel(Images.getImage(AI1.getHand().get(i)));
-                dcardPanel.add(AICardhit);
+            dcardPanel.removeAll();
+
+            dcardPanel.add(dealerlabel);
+
+            dealerlabel.setText("AI: " + AI1.handValue());
+
+            boolean cardAdded = false;
+            ArrayList<Integer> hand = AI1.getHand();
+
+            for (int i = 0; i < hand.size(); i += 1) {
+                if (hand.get(i) == AICard1Val && !cardAdded) {
+                    dcardPanel.add(AICard1);
+                    cardAdded = true;
+                } else {
+                    AICardhit = new JLabel(Images.getImage(hand.get(i)));
+                    dcardPanel.add(AICardhit);
+                }
             }
+            dcardPanel.repaint();
+
             if (AIbust) {
                 winlosebox.setText("Player");
             }
